@@ -1,7 +1,12 @@
 const express = require('express');
+const multer = require('multer')
 const router = express.Router();
 const response = require('../../network/response');
 const controller = require('./controller');
+
+const upload = multer({
+    dest:'public/files/',
+});
 
 router.get('/', (req, res) =>{
     
@@ -14,9 +19,9 @@ router.get('/', (req, res) =>{
     .catch(err => response.error(req ,res, 'No messages', 500, err.message))
 })
 
-router.post('/',(req,res)=>{
-
-    controller.addMessage(req.body.user, req.body.message)
+router.post('/', upload.single('file'),(req,res)=>{
+    
+    controller.addMessage(req.body.user, req.body.message, req.body.chat, req.file)
     .then( fullMessage => {
         response.success(req,res, fullMessage);
     })

@@ -1,15 +1,23 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+const app = express();
+const server = require('http').Server(app)
+const config = require('./config/config');
 
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const socket = require('./socket');
 const router = require('./network/routes')
 
-const app = express();
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(cors())
+socket.connect(server)
 
 router(app)
 
 
 app.use('/app', express.static('public'))
 
-app.listen(3000)
-console.log('The app is open in http://localhost:3000')
+server.listen(config.port, () => {
+    console.log(`The app is open in ${config.host}:${config.port}`)
+})

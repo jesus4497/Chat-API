@@ -7,13 +7,27 @@ function addMessage(message){
 }
 
 async function getMessages(id){
-    if(id !== null){
-        const message = await Model.findOne({ _id: id });
-        return message
-    }
+
+    return new Promise((resolve, reject) => {
+        if(id !== null){
+            Model.findOne({ _id: id })
+            .populate('user')
+            .exec((error, populated) => {
+                if(error) reject(error)
+                resolve(populated)
+            })
+            
+        }
+        
+        Model.find()
+        .populate('user')
+        .exec((error, populated) => {
+            if(error) reject('no chats')
+            resolve(populated)
+        })
+    })
     
-    const messages = await Model.find();
-    return messages;
+    
 }
 
 async function updateMessage(id, newMessage){

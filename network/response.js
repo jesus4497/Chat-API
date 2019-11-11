@@ -5,12 +5,12 @@ exports.success = (req,res, message, status = 200) => {
     })
 
 }
-exports.error = (req,res, message, status = 500, details) => {
+exports.error = (req,res, message, status, details) => {
     console.error(details)
-
+    
     res.status(status).send({
-        error: message,
         body:"",
+        error: message,
     })
 
 }
